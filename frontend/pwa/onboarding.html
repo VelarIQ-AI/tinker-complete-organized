@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Two-Brain Genie | Setup</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .onboarding-container {
+            background: #FFD700;
+            border-radius: 20px;
+            padding: 0;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .onboarding-header {
+            background: #1a1a1a;
+            color: #FFD700;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .onboarding-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .onboarding-header h2 {
+            font-size: 20px;
+            font-weight: normal;
+        }
+        
+        .onboarding-body {
+            padding: 30px;
+        }
+        
+        .welcome-text {
+            color: #1a1a1a;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .setting-group {
+            margin-bottom: 25px;
+        }
+        
+        .setting-label {
+            display: block;
+            color: #1a1a1a;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .setting-select, .setting-time {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #1a1a1a;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        .style-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .style-option {
+            background: white;
+            border: 2px solid #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .style-option:hover {
+            background: #1a1a1a;
+            color: #FFD700;
+        }
+        
+        .style-option.selected {
+            background: #1a1a1a;
+            color: #FFD700;
+        }
+        
+        .style-option h4 {
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+        
+        .style-option p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .start-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a1a1a;
+            color: #FFD700;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .start-btn:hover {
+            background: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="onboarding-container">
+        <div class="onboarding-header">
+            <h1>TWO-BRAIN GENIE</h1>
+            <h2 id="welcomeName">Welcome!</h2>
+        </div>
+        
+        <div class="onboarding-body">
+            <p class="welcome-text">Let's personalize your leadership journey</p>
+            
+            <div class="setting-group">
+                <label class="setting-label">How would you like your daily prompts?</label>
+                <div class="style-options">
+                    <div class="style-option" onclick="selectStyle(this, 'concise')">
+                        <h4>Concise</h4>
+                        <p>One sentence, one action</p>
+                    </div>
+                    <div class="style-option selected" onclick="selectStyle(this, 'balanced')">
+                        <h4>Balanced</h4>
+                        <p>Brief context with clear action</p>
+                    </div>
+                    <div class="style-option" onclick="selectStyle(this, 'detailed')">
+                        <h4>Detailed</h4>
+                        <p>Full explanation with examples</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="setting-group">
+                <label class="setting-label">Daily Prompt Time</label>
+                <input type="time" class="setting-time" id="promptTime" value="09:00">
+            </div>
+            
+            <button class="start-btn" onclick="completeOnboarding()">Start My Leadership Journey</button>
+        </div>
+    </div>
+    
+    <script>
+        let selectedStyle = 'balanced';
+        
+        // Get user name from localStorage
+        const userName = localStorage.getItem('userName') || localStorage.getItem('userFirstName') || 'Leader';
+        document.getElementById('welcomeName').textContent = 'Welcome, ' + userName + '!';
+        
+        function selectStyle(element, style) {
+            document.querySelectorAll('.style-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+            selectedStyle = style;
+        }
+        
+        function completeOnboarding() {
+            const promptTime = document.getElementById('promptTime').value;
+            
+            // Save preferences
+            localStorage.setItem('hasCompletedOnboarding', 'true');
+            localStorage.setItem('communicationStyle', selectedStyle);
+            localStorage.setItem('promptTime', promptTime);
+            
+            // Redirect to chat
+            window.location.href = 'chat.html';
+        }
+        
+        // If already onboarded, redirect
+        if (localStorage.getItem('hasCompletedOnboarding') === 'true') {
+            window.location.href = 'chat.html';
+        }
+    </script>
+</body>
+</html>

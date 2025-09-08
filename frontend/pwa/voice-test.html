@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        h1 {
+            color: #FF6B35;
+        }
+        .status {
+            padding: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .voice-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #FF6B35;
+            border: 5px solid #333;
+            color: white;
+            font-size: 50px;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+        }
+        .recording {
+            background: red;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        #result {
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            min-height: 50px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Voice Test Page</h1>
+        
+        <div class="status">
+            <strong>Browser:</strong> <span id="browser"></span><br>
+            <strong>Voice Support:</strong> <span id="support"></span><br>
+            <strong>Microphone Permission:</strong> <span id="permission">Not checked</span>
+        </div>
+        
+        <button class="voice-btn" id="voiceBtn">🎤</button>
+        
+        <div id="result">
+            <strong>Transcribed Text:</strong><br>
+            <span id="transcript">Press the microphone to start...</span>
+        </div>
+    </div>
+    
+    <script>
+        // Detect browser
+        const userAgent = navigator.userAgent;
+        let browserName = "Unknown";
+        
+        if (userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") === -1) {
+            browserName = "Safari";
+        } else if (userAgent.indexOf("Chrome") > -1) {
+            browserName = "Chrome";
+        } else if (userAgent.indexOf("Firefox") > -1) {
+            browserName = "Firefox";
+        }
+        
+        if (/iPhone|iPad|iPod/.test(userAgent)) {
+            browserName += " (iOS)";
+        } else if (/Android/.test(userAgent)) {
+            browserName += " (Android)";
+        }
+        
+        document.getElementById('browser').textContent = browserName;
+        
+        // Check for voice support
+        const SpeechRecognition = window.SpeechRecognition || 
+                                 window.webkitSpeechRecognition ||
+                                 window.mozSpeechRecognition ||
+                                 window.msSpeechRecognition;
+        
+        const supportEl = document.getElementById('support');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const transcript = document.getElementById('transcript');
+        const permissionEl = document.getElementById('permission');
+        
+        if (SpeechRecognition) {
+            supportEl.textContent = "✅ Supported";
+            supportEl.style.color = "green";
+            
+            const recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            
+            let isRecording = false;
+            
+            recognition.onstart = () => {
+                isRecording = true;
+                voiceBtn.classList.add('recording');
+                transcript.textContent = "Listening...";
+                permissionEl.textContent = "✅ Granted";
+                permissionEl.style.color = "green";
+            };
+            
+            recognition.onresult = (event) => {
+                let text = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    text += event.results[i][0].transcript;
+                }
+                transcript.textContent = text || "Listening...";
+            };
+            
+            recognition.onerror = (event) => {
+                voiceBtn.classList.remove('recording');
+                isRecording = false;
+                
+                if (event.error === 'not-allowed') {
+                    permissionEl.textContent = "❌ Denied";
+                    permissionEl.style.color = "red";
+                    transcript.textContent = "Microphone permission denied. Please enable it in browser settings.";
+                } else {
+                    transcript.textContent = "Error: " + event.error;
+                }
+            };
+            
+            recognition.onend = () => {
+                voiceBtn.classList.remove('recording');
+                isRecording = false;
+            };
+            
+            voiceBtn.onclick = async () => {
+                if (isRecording) {
+                    recognition.stop();
+                } else {
+                    // First try to get permission
+                    try {
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        stream.getTracks().forEach(track => track.stop());
+                        permissionEl.textContent = "✅ Granted";
+                        permissionEl.style.color = "green";
+                        recognition.start();
+                    } catch (err) {
+                        permissionEl.textContent = "❌ Denied";
+                        permissionEl.style.color = "red";
+                        transcript.textContent = "Cannot access microphone. Please check permissions.";
+                    }
+                }
+            };
+        } else {
+            supportEl.textContent = "❌ Not Supported";
+            supportEl.style.color = "red";
+            voiceBtn.disabled = true;
+            voiceBtn.style.opacity = "0.5";
+            transcript.textContent = "Voice recognition is not supported on this browser.";
+        }
+    </script>
+</body>
+</html>

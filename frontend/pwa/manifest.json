@@ -1,0 +1,30 @@
+{
+    "name": "TinkerGenie Leadership Development",
+    "short_name": "TinkerGenie",
+    "description": "180-day leadership development platform for gym owners",
+    "start_url": "/?v=1756501468",
+    "display": "standalone",
+    "background_color": "#1a1a1a",
+    "theme_color": "#FFD700",
+    "orientation": "portrait-primary",
+    "categories": ["business", "education", "productivity"],
+    "lang": "en-US",
+    "dir": "ltr",
+    "icons": [
+        {
+            "src": "icon-192.png?v=1756501468",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "icon-512.png?v=1756501468",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [],
+    "shortcuts": [],
+    "prefer_related_applications": false
+}

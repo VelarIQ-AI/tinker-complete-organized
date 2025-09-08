@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Two-Brain Genie</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #1a1a1a;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 20px;
+        }
+        
+        #login {
+            background: #FFD700;
+            border-radius: 20px;
+            padding: 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .login-header {
+            background: #1a1a1a;
+            padding: 30px 30px 20px 30px;
+        }
+        
+        .login-header h1 {
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .login-header h2 {
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 0;
+            font-size: 16px;
+        }
+        
+        .login-body {
+            padding: 30px;
+            background: #FFD700;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #1a1a1a;
+            border-radius: 10px;
+            font-size: 16px;
+            background: white;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            color: #FFD700;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background: #333;
+        }
+        
+        #loginError {
+            color: #d00;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login">
+            <div class="login-header">
+                <h1>TWO-BRAIN GENIE</h1>
+                <h2>Leadership Development</h2>
+            </div>
+            <div class="login-body">
+                <input type="text" id="username" placeholder="Username" value="admin">
+                <input type="password" id="password" placeholder="Password">
+                <button onclick="login()">Sign In</button>
+                <div id="loginError"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (username === 'admin' && password === 'TinkerAdmin2025!') {
+                localStorage.setItem('token', 'authenticated');
+                localStorage.setItem('userId', '1');
+                localStorage.setItem('userName', username);
+                
+                if (!localStorage.getItem('hasCompletedOnboarding')) {
+                    window.location.href = 'onboarding.html';
+                } else {
+                    window.location.href = 'chat.html';
+                }
+            } else {
+                document.getElementById('loginError').textContent = 'Invalid credentials';
+            }
+        }
+        
+        document.getElementById('password').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') login();
+        });
+        
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>
