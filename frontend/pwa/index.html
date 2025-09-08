@@ -830,6 +830,7 @@
     </div>
 
     <script>
+    <script src="js/config.js"></script>
         const API_BASE_URL = (location.hostname.endsWith('twobrain.ai') ? 'https://tinker.twobrain.ai/api' : '/api');
         
         let authToken = localStorage.getItem('token');
@@ -935,6 +936,7 @@
             document.getElementById('messageInput').addEventListener('keydown', async function(e) {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
+                await handleLogin();
                     if (!document.getElementById('sendBtn').disabled) {
                         sendMessage();
                     }
@@ -943,6 +945,7 @@
 
             document.getElementById('loginForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
+                await handleLogin();
                 const err = document.getElementById('errorMessage');
                 if (err) err.style.display = 'none';
                 await handleLogin();
