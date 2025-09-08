@@ -136,7 +136,7 @@
             color: var(--black);
         }
 
-        .btn-primary:hover:not(:) {
+        .btn-primary:hover:not(:disabled) {
             background: var(--yellow) !important;
             transform: translateY(-1px);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
@@ -584,7 +584,7 @@
             transition: all 0.3s;
         }
 
-        .send-btn:hover:not(:) {
+        .send-btn:hover:not(:disabled) {
             background: #FFA500;
             transform: scale(1.1);
         }
