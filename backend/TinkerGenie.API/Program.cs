@@ -4,6 +4,7 @@ using TinkerGenie.API.Services;
 using StackExchange.Redis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.FileProviders;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -73,6 +74,21 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Serve static frontend from frontend/pwa
+var webRoot = Path.Combine(Directory.GetCurrentDirectory(), "frontend", "pwa");
+if (Directory.Exists(webRoot))
+{
+    app.UseDefaultFiles(new DefaultFilesOptions
+    {
+        FileProvider = new PhysicalFileProvider(webRoot),
+        DefaultFileNames = new[] { "index.html" }
+    });
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(webRoot)
+    });
+}
 app.UseCors("AllowTinker");
 app.UseRouting();           // MUST come first
 app.UseAuthentication();    // Then authentication

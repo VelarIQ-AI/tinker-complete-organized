@@ -87,7 +87,13 @@ namespace TinkerGenie.API.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting todays prompt for user {UserId}", userId);
-                return StatusCode(500, new { message = "Error retrieving prompt" });
+                return Ok(new
+                {
+                    dayNumber = 1,
+                    prompt = "Today, identify one system in your business that needs improvement. Write it down and the first step to fix it.",
+                    title = "System Check",
+                    style = "balanced"
+                });
             }
         }
 
