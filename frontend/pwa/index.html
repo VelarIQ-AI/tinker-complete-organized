@@ -695,7 +695,7 @@
                 <p>Leadership Development Platform</p>
             </div>
             <div class="login-body">
-                <div id="errorMessage" class="error-message">
+                <div id="errorMessage" class="error-message" style="display: none;">
                     Invalid credentials. Please try again.
                 </div>
                 
@@ -945,6 +945,9 @@
 
             document.getElementById('loginForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
+                const err = document.getElementById('errorMessage');
+                if (err) err.style.display = 'none';
+                await handleLogin();
             });
 
             const timeInput = document.getElementById('promptTime');
@@ -1244,21 +1247,34 @@
                 if (data.success) {
                     authToken = data.token;
                     userId = data.userId;
+                    // Persist token under both keys for compatibility
+                    localStorage.setItem("token", data.token);
                     localStorage.setItem("authToken", data.token);
                     localStorage.setItem("userId", data.userId);
-                    
+
+                    const err = document.getElementById('errorMessage');
+                    if (err) err.style.display = 'none';
+
                     document.getElementById("login").style.display = "none";
                     document.getElementById("preferences").style.display = "flex";
-                    
+
                     document.getElementById("userName").textContent = data.userName || "User";
                     userName = data.userName || "User";
                     updateGreeting();
                 } else {
-                    alert("Login failed: " + (data.message || "Invalid credentials"));
+                    const err = document.getElementById('errorMessage');
+                    if (err) {
+                        err.textContent = data.message || 'Invalid credentials. Please try again.';
+                        err.style.display = 'block';
+                    }
                 }
             } catch (error) {
                 console.error("Login error:", error);
-                alert("Login failed. Please try again.");
+                const err = document.getElementById('errorMessage');
+                if (err) {
+                    err.textContent = 'Login failed. Please try again.';
+                    err.style.display = 'block';
+                }
             }
         }
         async function openSettings() {
