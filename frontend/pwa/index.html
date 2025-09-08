@@ -830,7 +830,7 @@
     </div>
 
     <script>
-        const API_BASE_URL = 'https://tinker.twobrain.ai/api';
+        const API_BASE_URL = (location.hostname.endsWith('twobrain.ai') ? 'https://tinker.twobrain.ai/api' : '/api');
         
         let authToken = localStorage.getItem('token');
         let userId = localStorage.getItem('userId');
